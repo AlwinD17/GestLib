@@ -38,7 +38,7 @@ const routes = createBrowserRouter([
           /*loader:...*/
         },
         {
-          /*path:"/:userId/libro"*/
+          /*path:"/:userId/libro/:libroId"*/
           path: '/libro',
           element: <LibroPage/>,
           /*loader:...*/
@@ -50,7 +50,7 @@ const routes = createBrowserRouter([
           /*loader:...*/
         },
         {
-          /*path:"/:userId/perfil"*/
+          /*path:"/:userId/perfil/:perfilId"*/
           path: '/perfil',
           element: <PerfilPage/>,
           /*loader:...*/
@@ -62,7 +62,7 @@ const routes = createBrowserRouter([
           /*loader:...*/
         },
         {
-          /*path:"/:userId/prestamo"*/
+          /*path:"/:userId/prestamo/:prestamoId"*/
           path: '/prestamo',
           element: <PrestamoPage/>,
           /*loader:...*/
