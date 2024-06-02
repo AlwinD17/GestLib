@@ -76,7 +76,7 @@ export const LoginPage = () => {
               </div>
 
               <div className='flex flex-col gap-y-7'>
-                <button type="submit" className="rounded-3xl border border-gray-950 bg-gray-950 px-16 py-2 text-sm font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-gray-600 active:text-gray-600 cursor-pointer">
+                <button type="submit" className="rounded-3xl border border-gray-950 bg-gray-950 px-16 py-2 text-sm font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-gray-600  cursor-pointer">
                   Login
                 </button>
                 <a href='/register' className='text-center hover:underline cursor-pointer'>
