@@ -39,7 +39,7 @@ const routes = createBrowserRouter([
         },
         {
           /*path:"/:userId/libro/:libroId"*/
-          path: '/libro',
+          path: '/libros/:isbn',
           element: <LibroPage/>,
           /*loader:...*/
         },

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -19,131 +19,41 @@ import {
   MenuItem,
   ListItemIcon,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
+import { useNavigate } from "react-router-dom";
+import { getAllLibros } from "../../api/libros.api"; // Importa la función para obtener libros
 
 const columns = [
   { id: "isbn", label: "ISBN", minWidth: 100 },
   { id: "title", label: "Título", minWidth: 170 },
   { id: "author", label: "Autor", minWidth: 170 },
-  { id: "genre", label: "Género", minWidth: 170 },
+  { id: "gender", label: "Género", minWidth: 170 },
   { id: "status", label: "Status", minWidth: 100 },
 ];
 
-function createData(id, isbn, title, author, genre, status) {
-  return { id, isbn, title, author, genre, status };
-}
-
-const initialRows = [
-  createData(
-    1,
-    "11100000",
-    "Titulooooooooooooooooooo 1",
-    "Autor1",
-    "Género1",
-    "Disponible"
-  ),
-  createData(
-    2,
-    "11100001",
-    "Titulooooooooooooooooooo 2",
-    "Autor2",
-    "Género2",
-    "Prestado"
-  ),
-  createData(
-    3,
-    "11100002",
-    "Titulooooooooooooooooooo 3",
-    "Autor3",
-    "Género3",
-    "Prestado"
-  ),
-  createData(
-    4,
-    "11100003",
-    "Titulooooooooooooooooooo 4",
-    "Autor4",
-    "Género4",
-    "Disponible"
-  ),
-  createData(
-    5,
-    "11100004",
-    "Titulooooooooooooooooooo 5",
-    "Autor5",
-    "Género5",
-    "Disponible"
-  ),
-  createData(
-    6,
-    "11100005",
-    "Titulooooooooooooooooooo 6",
-    "Autor6",
-    "Género6",
-    "Disponible"
-  ),
-  createData(
-    7,
-    "11100006",
-    "Titulooooooooooooooooooo 7",
-    "Autor6",
-    "Género6",
-    "Prestado"
-  ),
-  createData(
-    8,
-    "11100007",
-    "Titulooooooooooooooooooo 8",
-    "Autor5",
-    "Género4",
-    "Disponible"
-  ),
-  createData(
-    9,
-    "11100008",
-    "Titulooooooooooooooooooo 9",
-    "Autor7",
-    "Género7",
-    "Prestado"
-  ),
-  createData(
-    10,
-    "11100009",
-    "Titulooooooooooooooooooo 10",
-    "Autor3",
-    "Género2",
-    "Disponible"
-  ),
-  createData(
-    11,
-    "11100010",
-    "Titulooooooooooooooooooo 11",
-    "Autor3",
-    "Género3",
-    "Disponible"
-  ),
-  createData(
-    12,
-    "11100011",
-    "Titulooooooooooooooooooo 12",
-    "Autor2",
-    "Género3",
-    "Disponible"
-  ),
-];
-
 export const LibrosPage = () => {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [rows, setRows] = React.useState(initialRows);
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [searchBy, setSearchBy] = React.useState("title");
-  const open = Boolean(anchorEl);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rows, setRows] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [searchBy, setSearchBy] = useState("title");
   const navigate = useNavigate();
+
+  const fetchLibros = async () => {
+    try {
+      const response = await getAllLibros();
+      setRows(response.data);
+    } catch (error) {
+      console.error("Error fetching libros:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchLibros();
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -157,23 +67,21 @@ export const LibrosPage = () => {
   const handleSearch = (event, value) => {
     setSearchTerm(value);
     if (value === "") {
-      setRows(initialRows);
+      fetchLibros();
     } else {
-      const filteredRows = initialRows.filter((row) =>
+      const filteredRows = rows.filter((row) =>
         row[searchBy].toLowerCase().includes(value.toLowerCase())
       );
       setRows(filteredRows);
     }
   };
 
-  const handleFilterClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
   const handleFilterClose = (filter) => {
     setAnchorEl(null);
     if (filter) {
       setSearchBy(filter);
+      setSearchTerm(""); 
+      fetchLibros(); 
     }
   };
 
@@ -203,38 +111,56 @@ export const LibrosPage = () => {
           <Autocomplete
             id="free-solo-demo"
             freeSolo
-            options={initialRows.map((row) => row.title)}
+            options={rows.map((row) => row[searchBy])}
             renderInput={(params) => (
-              <TextField {...params} label="Buscar Libro" sx={{ width: 400 }} />
+              <TextField
+                {...params}
+                label={`Buscar libro por ${
+                  searchBy === "title"
+                    ? "título"
+                    : searchBy === "author"
+                    ? "autor"
+                    : "género"
+                }`}
+                sx={{ width: 400 }}
+              />
             )}
             onInputChange={handleSearch}
+            value={searchTerm}
           />
-          <IconButton onClick={handleFilterClick} sx={{ ml: 1 }}>
+
+          <IconButton
+            onClick={(event) => setAnchorEl(event.currentTarget)}
+            sx={{
+              ml: 1,
+              borderRadius: '8px', 
+              border: '1px solid', 
+              borderColor: 'rgba(0, 0, 0, 0.23)', 
+              padding: '8px',
+              '&:hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0.08)'
+              }
+            }}          
+          > 
             <FilterAltIcon />
           </IconButton>
           <Menu
             anchorEl={anchorEl}
-            open={open}
+            open={Boolean(anchorEl)}
             onClose={() => handleFilterClose(null)}
           >
-            <MenuItem onClick={() => handleFilterClose("title")}>
-              <ListItemIcon>
-                <FilterAltIcon />
-              </ListItemIcon>{" "}
-              Título
-            </MenuItem>
-            <MenuItem onClick={() => handleFilterClose("author")}>
-              <ListItemIcon>
-                <FilterAltIcon />
-              </ListItemIcon>{" "}
-              Autor
-            </MenuItem>
-            <MenuItem onClick={() => handleFilterClose("genre")}>
-              <ListItemIcon>
-                <FilterAltIcon />
-              </ListItemIcon>{" "}
-              Género
-            </MenuItem>
+            {["title", "author", "gender"].map((filter) => (
+              <MenuItem key={filter} onClick={() => handleFilterClose(filter)}>
+                <ListItemIcon>
+                  <FilterAltIcon />
+                </ListItemIcon>{" "}
+                {filter === "title"
+                  ? "Título"
+                  : filter === "author"
+                  ? "Autor"
+                  : "Género"}
+              </MenuItem>
+            ))}
           </Menu>
           <Typography
             variant="h6"
@@ -268,8 +194,8 @@ export const LibrosPage = () => {
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                      key={row.id}
-                      onClick={() => navigate("/libro")}
+                      key={row.isbn}
+                      onClick={() => navigate(`/libros/${row.isbn}`)}
                     >
                       {columns.map((column) => {
                         const value = row[column.id];
@@ -279,11 +205,11 @@ export const LibrosPage = () => {
                               <span
                                 style={{
                                   color:
-                                    value === "Disponible"
+                                    value === "disponible"
                                       ? "#498B58"
                                       : "#913D3D",
                                   backgroundColor:
-                                    value === "Disponible"
+                                    value === "disponible"
                                       ? "#D0FFD8"
                                       : "#F77272",
                                   fontWeight: "bold",
