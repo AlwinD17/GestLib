@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const librosApi = axios.create({
-  baseURL: 'http://localhost:8000/api/v1/libros/'  // Asegúrate de que esta URL coincida con la base URL de tu API
+  baseURL: 'http://localhost:8000/api/v1/libros/'  // Base para las peticiones de los libros
 });
 
 // Obtener todos los libros
