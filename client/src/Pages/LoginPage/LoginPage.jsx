@@ -1,40 +1,29 @@
 import React from 'react';
 import BackgroundImage from "../../assets/backgroundImageLogin.svg";
 import LogoImage from "../../assets/logo.png"
-
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useLoaderData} from "react-router-dom";
 import {useForm} from "react-hook-form";
+import {getAllUsuarios} from "../../api/usuarios.api";
+
+
+export async function loader(){
+  const usuarios= (await getAllUsuarios()).data;
+  return{usuarios};
+}
 
 export const LoginPage = () => {
 
-  const dataUsuarios=[
-    {
-      id:"101",
-      username:"user1",
-      password:"password1"
-    },
-    {
-      id:"102",
-      username:"user2",
-      password:"password2"
-    },
-    {
-      id:"103",
-      username:"user3",
-      password:"password3"
-    }
-  ];
-
+  const dataapi=useLoaderData();
+  console.log(dataapi.usuarios);
   const navigate=useNavigate();
   const {register,handleSubmit}=useForm();
   
   const onLoginButtom=handleSubmit(dataForm=>{
     console.log(dataForm);
-    const foundUser=dataUsuarios.find(user=>user.username==dataForm.username&&user.password==dataForm.password);
+    const foundUser=dataapi.usuarios.find(user=>user.username==dataForm.username&&user.password==dataForm.password);
 
     if(foundUser){
-        //navigate(`/${foundUser.id}/libros`);    
-        navigate(`/libros`);     
+        navigate(`/${foundUser.dni}/libros`);       
     }
     else{
         alert("Usuario no válido");

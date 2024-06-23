@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -23,7 +23,9 @@ const drawerWidth = 240;
 
 export const SideBar = () => {
   const navigate = useNavigate();
-  const [selectedItem, setSelectedItem] = useState("/libros");
+  const userId=(useParams()).userId;
+  const [selectedItem, setSelectedItem] = useState(`/${userId}/libros`);
+  
 
   const handleItemClick = (route) => {
     navigate(route);
@@ -57,8 +59,8 @@ export const SideBar = () => {
         <List>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick("/libros")}
-              sx={selectedItem === "/libros" ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/${userId}/libros`)}
+              sx={selectedItem === `/${userId}/libros` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <BookIcon />
@@ -68,8 +70,8 @@ export const SideBar = () => {
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick("/perfil")}
-              sx={selectedItem === "/perfil" ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/${userId}/usuarios/${userId}`)}
+              sx={selectedItem === `/${userId}/usuarios/${userId}` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <AccountCircleIcon />
@@ -79,8 +81,8 @@ export const SideBar = () => {
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick("/prestamos")}
-              sx={selectedItem === "/prestamos" ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/${userId}/prestamos`)}
+              sx={selectedItem === `/${userId}/prestamos` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <AssignmentIcon />
@@ -90,8 +92,8 @@ export const SideBar = () => {
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick("/canasta")}
-              sx={selectedItem === "/canasta" ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/${userId}/canasta`)}
+              sx={selectedItem === `/${userId}/canasta` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <ShoppingCartIcon />
@@ -101,8 +103,8 @@ export const SideBar = () => {
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick("/panel-administracion")}
-              sx={selectedItem === "/panel-administracion" ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/${userId}/panel-administracion`)}
+              sx={selectedItem === `/${userId}/panel-administracion` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <DashboardIcon />
@@ -112,8 +114,8 @@ export const SideBar = () => {
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick("/usuarios")}
-              sx={selectedItem === "/usuarios" ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/${userId}/usuarios`)}
+              sx={selectedItem === `/${userId}/usuarios` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <PeopleIcon />

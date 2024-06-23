@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 
 import {SideBar} from '../Components/SideBar/SideBar';
-import {LoginPage} from '../Pages/LoginPage/LoginPage';
+import {LoginPage, loader as loginLoader} from '../Pages/LoginPage/LoginPage';
 import {RegistrarsePage} from '../Pages/RegistrarsePage/RegistrarsePage';
 import {LibrosPage} from '../Pages/LibrosPage/LibrosPage';
 import {LibroPage} from '../Pages/LibroPage/LibroPage';
@@ -18,8 +18,8 @@ const routes = createBrowserRouter([
     
     {
       path:"/",
-      element:<LoginPage/>
-      /*loader:...*/
+      element:<LoginPage/>,
+      loader: loginLoader
     },
     {
       path:"/register",
@@ -27,55 +27,46 @@ const routes = createBrowserRouter([
       /*loader:...*/
     },
     {
-      /*path:"/:userId"*/
-      path:"/",
+      path:"/:userId",
       element:<SideBar/>,
       children:[
         {
-          /*path:"/:userId/libros"*/
-          path: '/libros',
+          path:"/:userId/libros",
           element: <LibrosPage />,
           /*loader:...*/
         },
         {
-          /*path:"/:userId/libro/:libroId"*/
-          path: '/libros/:isbn',
+          path:"/:userId/libros/:libroId",
           element: <LibroPage/>,
           /*loader:...*/
         },
         {
-          /*path:"/:userId/usuarios"*/
-          path: '/usuarios',
+          path:"/:userId/usuarios",
           element: <UsuariosPage/>,
           /*loader:...*/
         },
         {
-          /*path:"/:userId/perfil/:perfilId"*/
-          path: '/perfil',
+          path:"/:userId/usuarios/:perfilId",
           element: <PerfilPage/>,
           /*loader:...*/
         },
         {
-          /*path:"/:userId/prestamos"*/
-          path: '/prestamos',
+          path:"/:userId/prestamos",
           element: <PrestamosPage/>,
           /*loader:...*/
         },
         {
-          /*path:"/:userId/prestamo/:prestamoId"*/
-          path: '/prestamo',
+          path:"/:userId/prestamos/:prestamoId",
           element: <PrestamoPage/>,
           /*loader:...*/
         },
         {
-          /*path:"/:userId/canasta"*/
-          path: '/canasta',
+          path:"/:userId/canasta",
           element: <CanastaPage/>,
           /*loader:...*/
         },
         {
-          /*path:"/:userId/panel-administracion"*/
-          path: '/panel-administracion',
+          path:"/:userId/panel-administracion",
           element: <PanelAdministracionPage/>,
           /*loader:...*/
         }

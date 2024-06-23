@@ -22,7 +22,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getAllLibros } from "../../api/libros.api"; // Importa la función para obtener libros
 
 const columns = [
@@ -41,6 +41,7 @@ export const LibrosPage = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchBy, setSearchBy] = useState("title");
   const navigate = useNavigate();
+  const userId= (useParams()).userId;
 
   const fetchLibros = async () => {
     try {
@@ -195,7 +196,7 @@ export const LibrosPage = () => {
                       role="checkbox"
                       tabIndex={-1}
                       key={row.isbn}
-                      onClick={() => navigate(`/libros/${row.isbn}`)}
+                      onClick={() => navigate(`${row.isbn}`)}
                     >
                       {columns.map((column) => {
                         const value = row[column.id];
