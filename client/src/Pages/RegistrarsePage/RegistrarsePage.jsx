@@ -34,7 +34,7 @@ export const RegistrarsePage = () => {
 
   const onSubmit = (data) => {
     console.log(data)
-    navigate('/');
+    alert("Usuario registrado con éxito.");
   }
 
   return (
@@ -56,7 +56,7 @@ export const RegistrarsePage = () => {
               </div>
               <hr className='divider'/>
               <div className='formItem' id='item2'>
-                {['Nombre','Email','Dirección'].map((label) => textLabels(label))}
+                {['DNI','Nombre','Email','Dirección'].map((label) => textLabels(label))}
                 <Button variant="contained"
                   type='submit'
                   style={{

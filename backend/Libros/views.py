@@ -1,13 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .listLibros import AVLTree
+from backend.utils.AVL_classes import AVLTree
 from .serializer import LibroSerializer
 from .models import Libro
 
 avl = AVLTree()
 
-# Inicializa el AVL con los libros existentes
+# Inicializa el AVL con los libros existentes(COMENTAR CÓDIGO PARA MAKEMIGRATIONS Y MIGRATE)
 for libro in Libro.objects.all():
     avl.insert(libro.isbn, libro)
 
