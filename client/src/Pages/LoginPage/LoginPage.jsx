@@ -14,12 +14,12 @@ export async function loader(){
 export const LoginPage = () => {
 
   const dataapi=useLoaderData();
-  console.log(dataapi.usuarios);
+  console.log("Usuarios en base de datos: ", dataapi.usuarios);
   const navigate=useNavigate();
   const {register,handleSubmit}=useForm();
   
   const onLoginButtom=handleSubmit(dataForm=>{
-    console.log(dataForm);
+    console.log("Data form: ",dataForm);
     const foundUser=dataapi.usuarios.find(user=>user.username==dataForm.username&&user.password==dataForm.password);
 
     if(foundUser){

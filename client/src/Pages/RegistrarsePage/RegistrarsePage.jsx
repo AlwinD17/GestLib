@@ -34,7 +34,7 @@ export const RegistrarsePage = () => {
   const navigate = useNavigate()
 
   const onSubmit = async (data) => {
-    console.log(data)
+    console.log("Data form: ",data)
     const formattedData={
       dni:data["dni"],
       password:data["contraseña"],
@@ -44,12 +44,18 @@ export const RegistrarsePage = () => {
       full_name:data["nombre"]
     };
 
-    if(await createUsuario(formattedData)){
-      alert("Usuario registrado con éxito.");
-      navigate(`/${formattedData.dni}/libros`);
-    }
-    else{
-      alert("No se pudo registrar usuario.");
+    try {
+      const response = await createUsuario(formattedData);
+  
+      if (response) {
+        alert("Usuario registrado con éxito.");
+        navigate(`/${formattedData.dni}/libros`);
+      } else {
+        alert("No se pudo registrar usuario.");
+      }
+    } catch (error) {
+      console.error("Error registrando usuario:", error);
+      alert("No se pudo registrar usuario. Ingrese datos válidos.");
     }
     
   }
