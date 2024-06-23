@@ -2,8 +2,9 @@ import React from 'react'
 import './RegistrarsePage.css'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate} from 'react-router-dom'
 import { useForm } from "react-hook-form"
+import { createUsuario } from '../../api/usuarios.api'
 
 
 
@@ -32,9 +33,25 @@ export const RegistrarsePage = () => {
 
   const navigate = useNavigate()
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data)
-    alert("Usuario registrado con éxito.");
+    const formattedData={
+      dni:data["dni"],
+      password:data["contraseña"],
+      username:data["usuario"],
+      address:data["dirección"],
+      email:data["email"],
+      full_name:data["nombre"]
+    };
+
+    if(await createUsuario(formattedData)){
+      alert("Usuario registrado con éxito.");
+      navigate(`/${formattedData.dni}/libros`);
+    }
+    else{
+      alert("No se pudo registrar usuario.");
+    }
+    
   }
 
   return (
@@ -67,7 +84,7 @@ export const RegistrarsePage = () => {
                     'textTransform':'none',
                     'margin':'50px auto 10px',
                   }} >Registrarse</Button>
-                  <Link to='/' style={{'color':'black', 'textDecoration':'none', 'marginRight':'auto', 'marginLeft':'auto' }}>Login</Link>
+                  <Link to='/' style={{'color':'black', 'textDecoration':'none', 'marginRight':'auto', 'marginLeft':'auto' }}>Volver</Link>
               </div>
           </div>
         </form>
