@@ -41,7 +41,8 @@ export const RegistrarsePage = () => {
       username:data["usuario"],
       address:data["dirección"],
       email:data["email"],
-      full_name:data["nombre"]
+      full_name:data["nombre"],
+      type:"cliente"
     };
 
     try {

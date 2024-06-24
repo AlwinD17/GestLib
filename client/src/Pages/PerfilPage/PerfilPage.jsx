@@ -57,7 +57,8 @@ export const PerfilPage = () => {
       "password": data.contraseña,
       "email": data.email,
       "full_name": data.nombre,
-      "address": data.dirección
+      "address": data.dirección,
+      "type":user.type
     };
     
     try{

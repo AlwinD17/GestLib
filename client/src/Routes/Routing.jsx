@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom'
 
-import {SideBar} from '../Components/SideBar/SideBar';
+import {SideBar, loader as sidebarLoader} from '../Components/SideBar/SideBar';
 import {LoginPage, loader as loginLoader} from '../Pages/LoginPage/LoginPage';
 import {RegistrarsePage} from '../Pages/RegistrarsePage/RegistrarsePage';
 import {LibrosPage} from '../Pages/LibrosPage/LibrosPage';
@@ -29,6 +29,7 @@ const routes = createBrowserRouter([
     {
       path:"/:userId",
       element:<SideBar/>,
+      loader:sidebarLoader,
       children:[
         {
           path:"/:userId/libros",

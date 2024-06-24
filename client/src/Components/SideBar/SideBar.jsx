@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams, useLoaderData } from "react-router-dom";
+import { getUsuario } from "../../api/usuarios.api";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -21,10 +22,17 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import logo from "../../assets/logo.png";
 const drawerWidth = 240;
 
+export async function loader({params}){
+  const userId=params.userId;
+  const user= (await getUsuario(userId)).data;
+  return user;
+}
+
 export const SideBar = () => {
   const navigate = useNavigate();
-  const userId=(useParams()).userId;
-  const [selectedItem, setSelectedItem] = useState(`/${userId}/libros`);
+  const user=useLoaderData();
+  console.log(user);
+  const [selectedItem, setSelectedItem] = useState(`/${user.dni}/libros`);
   
 
   const handleItemClick = (route) => {
@@ -59,8 +67,8 @@ export const SideBar = () => {
         <List>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick(`/${userId}/libros`)}
-              sx={selectedItem === `/${userId}/libros` ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/${user.dni}/libros`)}
+              sx={selectedItem === `/${user.dni}/libros` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <BookIcon />
@@ -70,8 +78,8 @@ export const SideBar = () => {
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick(`/${userId}/usuarios/${userId}`)}
-              sx={selectedItem === `/${userId}/usuarios/${userId}` ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/${user.dni}/usuarios/${user.dni}`)}
+              sx={selectedItem === `/${user.dni}/usuarios/${user.dni}` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <AccountCircleIcon />
@@ -81,8 +89,8 @@ export const SideBar = () => {
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick(`/${userId}/prestamos`)}
-              sx={selectedItem === `/${userId}/prestamos` ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/${user.dni}/prestamos`)}
+              sx={selectedItem === `/${user.dni}/prestamos` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <AssignmentIcon />
@@ -90,39 +98,39 @@ export const SideBar = () => {
               <ListItemText primary="Préstamos" />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
+          {user.type=="cliente"&&<ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick(`/${userId}/canasta`)}
-              sx={selectedItem === `/${userId}/canasta` ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/${user.dni}/canasta`)}
+              sx={selectedItem === `/${user.dni}/canasta` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <ShoppingCartIcon />
               </ListItemIcon>
               <ListItemText primary="Canasta" />
             </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
+          </ListItem>}
+          {user.type=="administrador"&&<ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick(`/${userId}/panel-administracion`)}
-              sx={selectedItem === `/${userId}/panel-administracion` ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/${user.dni}/panel-administracion`)}
+              sx={selectedItem === `/${user.dni}/panel-administracion` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <DashboardIcon />
               </ListItemIcon>
               <ListItemText primary="Panel de Administración" />
             </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
+          </ListItem>}
+          {user.type=="administrador"&&<ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick(`/${userId}/usuarios`)}
-              sx={selectedItem === `/${userId}/usuarios` ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/${user.dni}/usuarios`)}
+              sx={selectedItem === `/${user.dni}/usuarios` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <PeopleIcon />
               </ListItemIcon>
               <ListItemText primary="Usuarios" />
             </ListItemButton>
-          </ListItem>
+          </ListItem>}
         </List>
         
         <List sx={{ marginTop: 'auto' }}>
