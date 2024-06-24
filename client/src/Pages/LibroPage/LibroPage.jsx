@@ -1,9 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import {useLoaderData} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import { faBookOpen } from '@fortawesome/free-solid-svg-icons';
+import { getLibro } from '../../api/libros.api';
+
+
+
+export async function loader({params}){
+  const libroId = params.libroId;
+  const libro= (await getLibro(libroId)).data;
+  return libro;
+}
 
 export const LibroPage = () => {
-
+  const libro=useLoaderData();
+  
   const dataLibro={
     isbn:"10009583",
     titulo:"Titulo del libro",
@@ -42,39 +53,39 @@ export const LibroPage = () => {
         <dl className="-my-3 divide-y divide-gray-100 text-sm">
           <div className=" p-3 ">
             <i></i>
-            <dt className="uppercase font-semibold text-lg text-gray-900 py-2">{dataLibro.titulo}</dt>
+            <dt className="uppercase font-semibold text-lg text-gray-900 py-2">{libro.title}</dt>
           </div>
 
           <div className="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
             <dt className="font-medium text-gray-900">ISBN</dt>
-            <dd className="text-gray-700 sm:col-span-2">{dataLibro.isbn}</dd>
+            <dd className="text-gray-700 sm:col-span-2">{libro.isbn}</dd>
           </div>
 
           <div className="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
             <dt className="font-medium text-gray-900">Autor</dt>
-            <dd className="text-gray-700 sm:col-span-2">{dataLibro.autor}</dd>
+            <dd className="text-gray-700 sm:col-span-2">{libro.author}</dd>
           </div>
 
           <div className="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
             <dt className="font-medium text-gray-900">Género</dt>
-            <dd className="text-gray-700 sm:col-span-2">{dataLibro.genero}</dd>
+            <dd className="text-gray-700 sm:col-span-2">{libro.gender}</dd>
           </div>
 
           <div className="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
             <dt className="font-medium text-gray-900">Fecha de publicación</dt>
-            <dd className="text-gray-700 sm:col-span-2">{dataLibro.fechapublicacion}</dd>
+            <dd className="text-gray-700 sm:col-span-2">{libro.date_publication}</dd>
           </div>
 
           <div className="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
             <dt className="font-medium text-gray-900">Descripción</dt>
-            <dd className="text-gray-700 sm:col-span-2">{dataLibro.descripcion}</dd>
+            <dd className="text-gray-700 sm:col-span-2">{libro.description}</dd>
           </div>
 
           <div className="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
             <dt className="font-medium text-gray-900">Status</dt>
             <dd className="sm:col-span-2">
-              <span className={`rounded-lg p-1 font-semibold ${dataLibro.status=="Disponible"?"bg-green-200 text-green-700" :"bg-red-200 text-red-700"}`}>
-                {dataLibro.status}
+              <span className={`rounded-lg p-1 font-semibold ${libro.status=="disponible"?"bg-green-200 text-green-700" :"bg-red-200 text-red-700"}`}>
+                {libro.status=="disponible"?"Disponible":"Prestado"}
               </span>
             </dd>
           </div>

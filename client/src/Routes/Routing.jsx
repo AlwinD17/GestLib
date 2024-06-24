@@ -4,7 +4,7 @@ import {SideBar} from '../Components/SideBar/SideBar';
 import {LoginPage, loader as loginLoader} from '../Pages/LoginPage/LoginPage';
 import {RegistrarsePage} from '../Pages/RegistrarsePage/RegistrarsePage';
 import {LibrosPage} from '../Pages/LibrosPage/LibrosPage';
-import {LibroPage} from '../Pages/LibroPage/LibroPage';
+import {LibroPage, loader as libroLoader} from '../Pages/LibroPage/LibroPage';
 import {UsuariosPage} from '../Pages/UsuariosPage/UsuariosPage';
 import {PerfilPage} from '../Pages/PerfilPage/PerfilPage';
 import {PrestamosPage} from '../Pages/PrestamosPage/PrestamosPage';
@@ -38,7 +38,7 @@ const routes = createBrowserRouter([
         {
           path:"/:userId/libros/:libroId",
           element: <LibroPage/>,
-          /*loader:...*/
+          loader: libroLoader
         },
         {
           path:"/:userId/usuarios",
