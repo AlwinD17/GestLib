@@ -34,21 +34,22 @@ class UsuarioView(viewsets.ModelViewSet):
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
-    def update(self, request,**kwargs):
+    def update(self,request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         # Update the AVL tree
-        avl_usuarios.insert(request.data['dni'], request.data)
+        avl_usuarios.delete(instance.dni)
+        avl_usuarios.insert(serializer.validated_data['dni'], serializer.validated_data)
         # Update in the database
         self.perform_update(serializer)
         return Response(serializer.data)
 
-    def destroy(self,request):
+    def destroy(self,request, *args, **kwargs):
         instance = self.get_object()
         # Destroy in the AVL tree
-        avl_usuarios.delete(request.data['dni'])
+        avl_usuarios.delete(instance.dni)
         # Destroy in the database
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)

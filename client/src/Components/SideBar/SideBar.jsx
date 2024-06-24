@@ -129,7 +129,7 @@ export const SideBar = () => {
         <Divider />
           <ListItem disablePadding>
             <ListItemButton 
-             
+             onClick={() => handleItemClick(`/`)}
             >
               <ListItemIcon>
                 <ExitToAppIcon />
