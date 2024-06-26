@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from backend.utils.AVL_classes import AVLTree
+from backend.utils.avl_classes import AVLTree
 from .serializer import LibroSerializer
 from .models import Libro
 
