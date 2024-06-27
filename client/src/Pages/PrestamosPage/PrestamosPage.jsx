@@ -11,6 +11,14 @@ import { Box, Typography, IconButton, Stack, TextField, Grid } from "@mui/materi
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
+import { getAllPrestamos } from "../../api/prestamos.api"; 
+import { useLoaderData } from "react-router-dom";
+
+export async function loader(){
+  const prestamos=(await getAllPrestamos()).data;
+  return prestamos;
+}
+
 const columns = [
   { id: "codigo", label: "Código", minWidth: 100, icon: <FilterAltIcon /> },
   { id: "isbn", label: "ISBN", minWidth: 100, icon: <FilterAltIcon /> },
@@ -22,19 +30,18 @@ function createData(codigo, isbn, dni, status) {
   return { codigo, isbn, dni, status };
 }
 
-const rows = [
-  createData("22200563", "978-0-306-40615-7", "73849526", "Activo"),
-  createData("11100001", "Títuloooooooooooooooooo 1", "Autor1", "Vencido"),
-  createData("11100002", "Títuloooooooooooooooooo 2", "Autor2", "Terminado"),
-  createData("11100003", "Títuloooooooooooooooooo 3", "Autor3", "Terminado"),
-  createData("11100004", "Títuloooooooooooooooooo 4", "Autor4", "Activo"),
-  createData("11100005", "Títuloooooooooooooooooo 5", "Autor5", "Terminado"),
-];
+
 
 export const PrestamosPage = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [searchQuery, setSearchQuery] = React.useState("");
+  const prestamos=useLoaderData();
+  
+
+  const rows=prestamos.map((prestamo)=>createData(prestamo.id,prestamo.libro,prestamo.usuario,prestamo.status));
+
+  
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

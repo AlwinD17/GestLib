@@ -7,7 +7,7 @@ import {LibrosPage} from '../Pages/LibrosPage/LibrosPage';
 import {LibroPage, loader as libroLoader} from '../Pages/LibroPage/LibroPage';
 import {UsuariosPage} from '../Pages/UsuariosPage/UsuariosPage';
 import {PerfilPage, loader as loaderPerfil} from '../Pages/PerfilPage/PerfilPage';
-import {PrestamosPage} from '../Pages/PrestamosPage/PrestamosPage';
+import {PrestamosPage, loader as loaderPrestamos} from '../Pages/PrestamosPage/PrestamosPage';
 import {PrestamoPage} from '../Pages/PrestamoPage/PrestamoPage';
 import {CanastaPage} from '../Pages/CanastaPage/CanastaPage';
 import {PanelAdministracionPage} from '../Pages/PanelAdministracionPage/PanelAdministracionPage';
@@ -54,7 +54,7 @@ const routes = createBrowserRouter([
         {
           path:"/:userId/prestamos",
           element: <PrestamosPage/>,
-          /*loader:...*/
+          loader:loaderPrestamos
         },
         {
           path:"/:userId/prestamos/:prestamoId",
