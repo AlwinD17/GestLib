@@ -8,8 +8,8 @@ from .models import Libro
 avl = AVLTree()
 
 # Inicializa el AVL con los libros existentes(COMENTAR CÓDIGO PARA MAKEMIGRATIONS Y MIGRATE)
-for libro in Libro.objects.all():
-    avl.insert(libro.isbn, libro)
+#for libro in Libro.objects.all():
+#avl.insert(libro.isbn, libro)
 
 class LibroListView(APIView):
     def get(self, request):

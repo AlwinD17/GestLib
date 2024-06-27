@@ -10,8 +10,8 @@ from backend.utils.AVL_classes import AVLTree
 
 # Initialize AVL (COMENTAR CÓDIGO PARA MAKEMIGRATIONS Y MIGRATE)
 avl_usuarios=AVLTree()
-for usuario in Usuario.objects.all():
-    avl_usuarios.insert(usuario.dni,usuario)
+#for usuario in Usuario.objects.all():
+#avl_usuarios.insert(usuario.dni,usuario)
 
 class UsuarioView(viewsets.ModelViewSet):
     serializer_class = UsuarioSerializer
