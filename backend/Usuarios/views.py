@@ -9,7 +9,7 @@ from .apps import avl_prestamos, avl_usuarios
 
 
 # Initialize AVL (COMENTAR CÓDIGO PARA MAKEMIGRATIONS Y MIGRATE)
-avl_usuarios=AVLTree()
+#avl_usuarios=AVLTree()
 #for usuario in Usuario.objects.all():
 #avl_usuarios.insert(usuario.dni,usuario)
 
