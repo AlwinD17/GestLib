@@ -110,21 +110,21 @@ export const PanelAdministracionPage = () => {
           <i className="fas fa-book text-4xl text-gray-500 mr-4"></i>
           <div>
             <h2 className="text-xl font-bold">Libros</h2>
-            <p className="text-2xl">3 000</p>
+            <p className="text-2xl">{data.libros.length}</p>
           </div>
         </div>
         <div className="bg-white p-6 shadow rounded flex items-center">
           <i className="fas fa-users text-4xl text-gray-500 mr-4"></i>
           <div>
             <h2 className="text-xl font-bold">Usuarios</h2>
-            <p className="text-2xl">150</p>
+            <p className="text-2xl">{data.usuarios.length}</p>
           </div>
         </div>
         <div className="bg-white p-6 shadow rounded flex items-center">
           <i className="fas fa-exchange-alt text-4xl text-gray-500 mr-4"></i>
           <div>
             <h2 className="text-xl font-bold">Préstamos</h2>
-            <p className="text-2xl">51</p>
+            <p className="text-2xl">{data.prestamos.length}</p>
           </div>
         </div>
       </section>
