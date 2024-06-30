@@ -7,13 +7,13 @@ class LibrosConfig(AppConfig):
     
     def ready(self):
         from .models import Libro
-        from backend.utils.avl_classes import AVLTree
+        from backend.utils.AVL_classes import AVLTree
 
         global avl_libros
         avl_libros=AVLTree()
 
         #Comentar para makemigrations y migrate
-        for libro in Libro.objects.all():
-            avl_libros.insert(libro.isbn,libro) 
+        #for libro in Libro.objects.all():
+            #avl_libros.insert(libro.isbn,libro) 
 
         import Libros.signals
