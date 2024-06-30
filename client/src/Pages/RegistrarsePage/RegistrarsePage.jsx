@@ -22,7 +22,7 @@ export const RegistrarsePage = () => {
       {...register(label.toLowerCase(), { required: true, minLength: 5 })}
       error={!!errors[label.toLowerCase()]}
       helperText={errors[label.toLowerCase()] ? errors.message : ''}
-      type={label === 'contraseña'? 'password' : null}
+      type={label ==='contraseña' ? 'password' : null}
     />
   );
 
@@ -65,18 +65,18 @@ export const RegistrarsePage = () => {
   return (
     <>
       <div className='container' style={{
-        'margin':'5vh  5vw',
-        'padding':'10vh 10vw',
+        margin:'5vh 5vw',
+        padding:'10vh 10vw',
       }}>
         <form onSubmit={handleSubmit(onSubmit)} >
           <div className='formContainer' sx={{
-            'display':'flex',
-            'minHeight':'70vh',
-            'borderRadius':'30px',
-            'justifyContent':'center'
+            display:'flex',
+            minHeight:'70vh',
+            borderRadius:'30px',
+            justifyContent:'center'
             }}>
               <div className='formItem' id='item1'>
-                  <h1 style={{'fontSize':'40px'}}>Regístrate</h1>
+                  <h1 style={{fontSize:'40px'}}>Regístrate</h1>
                   {['Usuario','Contraseña'].map((label) => textLabels(label))}
               </div>
               <hr className='divider'/>
@@ -85,14 +85,14 @@ export const RegistrarsePage = () => {
                 <Button variant="contained"
                   type='submit'
                   style={{
-                    'backgroundColor':'black', 
-                    'color':'white', 
-                    'borderRadius':'50px', 
-                    'width':'200px', 
-                    'textTransform':'none',
-                    'margin':'50px auto 10px',
+                    backgroundColor:'black', 
+                    color:'white', 
+                    borderRadius:'50px', 
+                    width:'200px', 
+                    textTransform:'none',
+                    margin:'50px auto 10px',
                   }} >Registrarse</Button>
-                  <Link to='/' style={{'color':'black', 'textDecoration':'none', 'marginRight':'auto', 'marginLeft':'auto' }}>Volver</Link>
+                  <Link to='/' style={{color:'black', textDecoration:'none', marginRight:'auto', marginLeft:'auto' }}>Volver</Link>
               </div>
           </div>
         </form>
