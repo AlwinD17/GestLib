@@ -23,11 +23,12 @@ const columns = [
   { id: "codigo", label: "Código", minWidth: 100, icon: <FilterAltIcon /> },
   { id: "isbn", label: "ISBN", minWidth: 100, icon: <FilterAltIcon /> },
   { id: "dni", label: "DNI", minWidth: 100, icon: <FilterAltIcon /> },
+  { id: "fecha_vencimiento", label: "Fecha vencimiento", minWidth: 100, icon: <FilterAltIcon /> },
   { id: "status", label: "Status", minWidth: 100, icon: <FilterAltIcon /> },
 ];
 
-function createData(codigo, isbn, dni, status) {
-  return { codigo, isbn, dni, status };
+function createData(codigo, isbn, dni,fecha_vencimiento, status) {
+  return { codigo, isbn, dni,fecha_vencimiento, status };
 }
 
 
@@ -39,7 +40,7 @@ export const PrestamosPage = () => {
   const prestamos=useLoaderData();
   
 
-  const rows=prestamos.map((prestamo)=>createData(prestamo.id,prestamo.libro,prestamo.usuario,prestamo.status));
+  const rows=prestamos.map((prestamo)=>createData(prestamo.id,prestamo.libro,prestamo.usuario,prestamo.end_date,prestamo.status));
 
   
 
@@ -61,6 +62,7 @@ export const PrestamosPage = () => {
       row.codigo.toLowerCase().includes(searchQuery.toLowerCase()) ||
       row.isbn.toLowerCase().includes(searchQuery.toLowerCase()) ||
       row.dni.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      row.fecha_vencimiento.toLowerCase().includes(searchQuery.toLowerCase()) ||
       row.status.toLowerCase().includes(searchQuery.toLowerCase())
     );
   });
