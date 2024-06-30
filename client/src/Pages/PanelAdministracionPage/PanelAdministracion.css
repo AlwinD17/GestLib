@@ -1,0 +1,43 @@
+.text-sm {
+    font-size: 14px;
+    font-family: 'Georgia', sans-serif;
+    transition: border-color 0.3s ease-in-out;
+}
+.react-datepicker-wrapper {
+    display: inline-block;
+}
+
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.react-datepicker-popper-enter {
+    animation: fadeIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+.react-datepicker__header {
+  background-color: #35e455; /* Color de fondo del encabezado */
+}
+
+.react-datepicker__day, .react-datepicker__day-name {
+  color: #333; /* Color de texto para los días y nombres de días */
+}
