@@ -3,12 +3,15 @@ import {useLoaderData} from "react-router-dom";
 import axios from "axios";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { createLibro } from "../../api/libros.api";
+import { getAllUsuarios } from "../../api/usuarios.api";
 
 export async function loader(){
-
+  const usuarios=(await getAllUsuarios()).data;
+  return{usuarios};
 }
 
 export const PanelAdministracionPage = () => {
+  const dataapi=useLoaderData();
   const [isbn, setIsbn] = useState("");
   const [title, setTitle] = useState("");
   const [gender, setGenre] = useState("");
