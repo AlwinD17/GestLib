@@ -1,13 +1,19 @@
 import React, { useState } from "react";
+import {useLoaderData} from "react-router-dom";
 import axios from "axios";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import { createLibro } from "../../api/libros.api";
+
+export async function loader(){
+
+}
 
 export const PanelAdministracionPage = () => {
   const [isbn, setIsbn] = useState("");
   const [title, setTitle] = useState("");
-  const [genre, setGenre] = useState("");
+  const [gender, setGenre] = useState("");
   const [author, setAuthor] = useState("");
-  const [publication, setPublication] = useState("");
+  const [date_publication, setPublication] = useState("");
   const [description, setDescription] = useState("");
   const [isbnLoan, setIsbnLoan] = useState("");
   const [dni, setDni] = useState("");
@@ -17,13 +23,13 @@ export const PanelAdministracionPage = () => {
     const bookData = {
       isbn,
       title,
-      genre,
+      gender,
       author,
-      publication,
+      date_publication,
       description,
     };
     try {
-      await axios.post("URL_DEL_BACKEND/api/v1/libros/", bookData);
+      await createLibro(bookData)
       alert("Libro añadido con éxito");
     } catch (error) {
       console.error("Error al añadir libro:", error);
@@ -125,7 +131,7 @@ export const PanelAdministracionPage = () => {
               <input
                 type="text"
                 id="publication"
-                value={publication}
+                value={date_publication}
                 onChange={(e) => setPublication(e.target.value)}
                 className="w-full sm:w-80 border border-gray-300 p-2 rounded-full"
               />
@@ -138,7 +144,7 @@ export const PanelAdministracionPage = () => {
             <input
               type="text"
               id="genre"
-              value={genre}
+              value={gender}
               onChange={(e) => setGenre(e.target.value)}
               className="w-80 border border-gray-300 p-2 rounded-full"
             />
