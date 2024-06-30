@@ -44,7 +44,7 @@ const labels = [
 export const LibroPage = () => {
   
   const { libro, user} = useLoaderData();
-  const { dni } = useParams();
+  const userId = useParams().userId; // Obtener userId(DNI) desde los parámetros de la URL
 
   const bookFormatted={
     title: libro.title,
