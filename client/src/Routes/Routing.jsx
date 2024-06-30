@@ -10,7 +10,7 @@ import {PerfilPage, loader as loaderPerfil} from '../Pages/PerfilPage/PerfilPage
 import {PrestamosPage, loader as loaderPrestamos} from '../Pages/PrestamosPage/PrestamosPage';
 import {PrestamoPage} from '../Pages/PrestamoPage/PrestamoPage';
 import {CanastaPage} from '../Pages/CanastaPage/CanastaPage';
-import {PanelAdministracionPage} from '../Pages/PanelAdministracionPage/PanelAdministracionPage';
+import {PanelAdministracionPage, loader as loaderPanel} from '../Pages/PanelAdministracionPage/PanelAdministracionPage';
 
 
 
@@ -69,7 +69,7 @@ const routes = createBrowserRouter([
         {
           path:"/:userId/panel-administracion",
           element: <PanelAdministracionPage/>,
-          /*loader:...*/
+          loader:loaderPanel
         }
       ]
     }

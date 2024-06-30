@@ -12,12 +12,12 @@ export const getAllLibros = () => {
 
 // Crear un nuevo libro
 export const createLibro = (libro) => {
-  return librosApi.post('/add/', libro);
+  return librosApi.post('/', libro);
 };
 
 // Actualizar un libro existente
 export const updateLibro = (isbn, libro) => {
-  return librosApi.put(`/update/${isbn}/`, libro);
+  return librosApi.put(`/${isbn}/`, libro);
 };
 
 // Obtener un libro específico
@@ -27,5 +27,5 @@ export const getLibro = (isbn) => {
 
 // Eliminar un libro
 export const deleteLibro = (isbn) => {
-  return librosApi.delete(`/delete/${isbn}/`);
+  return librosApi.delete(`/${isbn}/`);
 };
