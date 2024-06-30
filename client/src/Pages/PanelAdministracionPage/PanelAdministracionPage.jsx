@@ -2,16 +2,19 @@ import React, { useState } from "react";
 import {useLoaderData} from "react-router-dom";
 import axios from "axios";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { createLibro } from "../../api/libros.api";
+import { createLibro,getAllLibros } from "../../api/libros.api";
 import { getAllUsuarios } from "../../api/usuarios.api";
+import { createPrestamo,getAllPrestamos } from "../../api/prestamos.api";
 
 export async function loader(){
   const usuarios=(await getAllUsuarios()).data;
-  return{usuarios};
+  const libros=(await getAllLibros()).data;
+  const prestamos=(await getAllPrestamos()).data;
+  return{usuarios,libros,prestamos};
 }
 
 export const PanelAdministracionPage = () => {
-  const dataapi=useLoaderData();
+  const data=useLoaderData();
   const [isbn, setIsbn] = useState("");
   const [title, setTitle] = useState("");
   const [gender, setGenre] = useState("");
@@ -32,22 +35,66 @@ export const PanelAdministracionPage = () => {
       description,
     };
     try {
-      await createLibro(bookData)
+      await createLibro(bookData);
       alert("Libro añadido con éxito");
     } catch (error) {
       console.error("Error al añadir libro:", error);
-      alert("Hubo un error al añadir el libro");
+      alert("Hubo un error al añadir el libro.");
     }
   };
 
   const handleGenerateLoan = async () => {
-    const loanData = { isbn: isbnLoan, dni, days };
-    try {
-      await axios.post("URL_DEL_BACKEND/api/v1/prestamos/", loanData);
-      alert("Préstamo generado con éxito");
-    } catch (error) {
-      console.error("Error al generar préstamo:", error);
-      alert("Hubo un error al generar el préstamo");
+    const loanData = { libro: isbnLoan, usuario:dni, time_in_days:days };
+    let esValido = true;
+    let errores = [];
+
+    // Validacion de libro
+    const libro = data.libros.find((libro) => libro.isbn === loanData.libro);
+    if (libro) {
+      if (libro.status === "prestado") {
+        esValido = false;
+        errores.push("Libro no está disponible.");
+      }
+    } else {
+      esValido = false;
+      errores.push("Ingrese un libro válido.");
+    }
+    // Validacion de usuario
+    const usuario = data.usuarios.find((usuario) => usuario.dni === loanData.usuario);
+    if (usuario) {
+      let nPrestamos = 0;
+      data.prestamos.forEach((prestamo) => {
+        if (prestamo.usuario === usuario.dni) {
+          nPrestamos++;
+        }
+      });
+      if (nPrestamos >= 3) {
+        esValido = false;
+        errores.push("Usuario ya alcanzó el límite de préstamos.");
+      }
+    } else {
+      esValido = false;
+      errores.push("Ingrese un usuario válido.");
+    }
+    //Validacion de dias
+    if(loanData.time_in_days>7 || loanData.time_in_days<1){
+      esValido = false;
+      errores.push("Ingrese un número válido de días.");
+    }
+
+    // Mostrar errores si hay
+    if (errores.length > 0) {
+      alert(errores.join('\n'));
+    }
+    // Sí data es válida
+    if (esValido) {
+      try {
+        await createPrestamo(loanData);
+        alert("Préstamo generado con éxito.");
+      } catch (error) {
+        console.error("Error creando préstamo: ", error);
+        alert("Hubo un error generando el préstamo.");
+      }
     }
   };
 
@@ -210,7 +257,7 @@ export const PanelAdministracionPage = () => {
                 Días:
               </label>
               <input
-                type="text"
+                type="number"
                 id="days"
                 value={days}
                 onChange={(e) => setDays(e.target.value)}
