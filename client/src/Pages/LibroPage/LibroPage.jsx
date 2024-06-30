@@ -96,7 +96,6 @@ export const LibroPage = () => {
     reset
   } = useForm();
 
-  // Función que se ejecuta al enviar el formulario
   const onSubmit = async (data) => {
     const dataFormatted = {
       "isbn": libro.isbn,
@@ -113,7 +112,6 @@ export const LibroPage = () => {
       console.log(response);
       if (response && response.status === 200) { 
         alert("Se actualizó el libro exitosamente");
-        // Recargar la página
         window.location.reload();
       } else {
         alert("No se pudo actualizar el libro.");
@@ -122,8 +120,7 @@ export const LibroPage = () => {
       console.log("Error: ", error);
       alert("No se pudo actualizar el libro. Ingrese datos válidos");
     }
-    
-    // Asegúrate de llamar a handleClose
+
     handleClose();
   };
 
