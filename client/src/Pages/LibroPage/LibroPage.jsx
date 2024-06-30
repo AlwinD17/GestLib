@@ -3,6 +3,7 @@ import { useLoaderData, useParams, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookOpen } from '@fortawesome/free-solid-svg-icons';
 import { getLibro } from '../../api/libros.api';
+import { getUsuario } from "../../api/usuarios.api";
 import { ToastContainer, toast } from 'react-toastify';
 import { Box, Modal, Typography, TextField, Button } from '@mui/material'
 import { getUsuario } from '../../api/usuarios.api';
@@ -42,33 +43,22 @@ const labels = [
 ]
 
 export const LibroPage = () => {
-  
-
-
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const { libro, user } = useLoaderData();
+  const libro = useLoaderData();
   const { dni } = useParams();
-
-  const bookFormatted={
-    title: libro.title,
-    author : libro.author,
-    gender: libro.gender,
-    date_publication: libro.date_publication,
-    description: libro.description
-  };
 
   const [libroCanasta, setLibroCanasta] = useState(false);
 
   function handleLibroCanasta() {
-    const storedCanasta = JSON.parse(localStorage.getItem(`canasta_${dni}`)) || [];
+    // Obtener la canasta actual del usuario desde localStorage usando userId
+    const storedCanasta = JSON.parse(localStorage.getItem(`canasta_${userId}`)) || [];
+    
+    // Verificar si el libro ya está en la canasta del usuario
     const libroEnCanasta = storedCanasta.find((item) => item.isbn === libro.isbn);
-
+  
     if (!libroEnCanasta) {
+      // Si el libro no está en la canasta, añadirlo y actualizar localStorage
       storedCanasta.push(libro);
-      localStorage.setItem(`canasta_${dni}`, JSON.stringify(storedCanasta));
+      localStorage.setItem(`canasta_${userId}`, JSON.stringify(storedCanasta));
       setLibroCanasta(true);
       toast.success('Libro añadido a la canasta');
     } else {

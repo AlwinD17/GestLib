@@ -1,12 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
 import {
   Box,
   Typography,
@@ -20,6 +12,14 @@ import {
   ListItemIcon,
   Checkbox,
   Button,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
@@ -45,12 +45,12 @@ export const CanastaPage = () => {
   const [searchBy, setSearchBy] = useState("title");
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
-  const { dni } = useParams();
+  const { userId } = useParams(); // Utilizamos userId(dni)
 
   useEffect(() => {
-    const storedCanasta = JSON.parse(localStorage.getItem(`canasta_${dni}`)) || [];
+    const storedCanasta = JSON.parse(localStorage.getItem(`canasta_${userId}`)) || [];
     setRows(storedCanasta);
-  }, [dni]);
+  }, [userId]); // Actualizamos useEffect para que dependa de userId
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -64,7 +64,7 @@ export const CanastaPage = () => {
   const handleSearch = (event, value) => {
     setSearchTerm(value);
     if (value === "") {
-      const storedCanasta = JSON.parse(localStorage.getItem(`canasta_${dni}`)) || [];
+      const storedCanasta = JSON.parse(localStorage.getItem(`canasta_${userId}`)) || [];
       setRows(storedCanasta);
     } else {
       const filteredRows = rows.filter((row) =>
@@ -79,7 +79,7 @@ export const CanastaPage = () => {
     if (filter) {
       setSearchBy(filter);
       setSearchTerm("");
-      const storedCanasta = JSON.parse(localStorage.getItem(`canasta_${dni}`)) || [];
+      const storedCanasta = JSON.parse(localStorage.getItem(`canasta_${userId}`)) || [];
       setRows(storedCanasta);
     }
   };
@@ -99,8 +99,8 @@ export const CanastaPage = () => {
     const newRows = rows.filter(row => !selected.includes(row.isbn));
     setRows(newRows);
     setSelected([]);
-    localStorage.setItem(`canasta_${dni}`, JSON.stringify(newRows));
-    toast.success("Libro(s) eliminado(s) de la canasta.");
+    localStorage.setItem(`canasta_${userId}`, JSON.stringify(newRows));
+    toast.success("Libro eliminado de la canasta");
   };
 
   return (
@@ -291,7 +291,7 @@ export const CanastaPage = () => {
         disabled={selected.length === 0}
         sx={{ margin: "16px", display: 'block', marginLeft: 'auto', marginRight: 'auto', backgroundColor: "#E74C3C " }}
       >
-        Eliminar libro(s)
+        Eliminar libro
       </Button>
     </>
   );

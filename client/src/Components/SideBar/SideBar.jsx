@@ -31,7 +31,6 @@ export async function loader({params}){
 export const SideBar = () => {
   const navigate = useNavigate();
   const user=useLoaderData();
-  console.log(user);
   const [selectedItem, setSelectedItem] = useState(`/${user.dni}/libros`);
   
 
