@@ -1,20 +1,64 @@
 import React, { useState } from 'react';
-import { useLoaderData, useParams } from 'react-router-dom';
+import { useLoaderData, useParams, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookOpen } from '@fortawesome/free-solid-svg-icons';
 import { getLibro } from '../../api/libros.api';
 import { ToastContainer, toast } from 'react-toastify';
+import { Box, Modal, Typography, TextField, Button } from '@mui/material'
+import { getUsuario } from '../../api/usuarios.api';
+import { updateLibro } from '../../api/libros.api';
+import { useForm } from "react-hook-form";
 import 'react-toastify/dist/ReactToastify.css';
 
 export async function loader({ params }) {
   const libroId = params.libroId;
   const libro = (await getLibro(libroId)).data;
-  return libro;
+  const userId = params.userId;
+  const user = (await getUsuario(userId)).data;
+  return { libro, user };
 }
 
+const labels = [
+  {
+    name:'Título',
+    label:'title'
+  },
+  {
+    name:'Autor',
+    label:'author'
+  },
+  {
+    name:'Género',
+    label:'gender'
+  },
+  {
+    name:'Fecha de publicación',
+    label:'date_publication'
+  },
+  {
+    name:'Descripción',
+    label:'description'
+  }
+]
+
 export const LibroPage = () => {
-  const libro = useLoaderData();
+  
+
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const { libro, user } = useLoaderData();
   const { dni } = useParams();
+
+  const bookFormatted={
+    title: libro.title,
+    author : libro.author,
+    gender: libro.gender,
+    date_publication: libro.date_publication,
+    description: libro.description
+  };
 
   const [libroCanasta, setLibroCanasta] = useState(false);
 
@@ -31,6 +75,67 @@ export const LibroPage = () => {
       toast.warning('Este libro ya está en la canasta');
     }
   }
+
+
+  const textLabels = (element, defaultValue) => (
+    <Box>
+      <Typography key={element.name} variant='h6' fontWeight='bold'>
+        {element.name}: 
+      </Typography>
+        <TextField
+          key={element.label}
+          id={`outlined-error-helper-text-${element.label}`}
+          label={element.name}
+          variant="outlined"
+          margin="normal"
+          fullWidth={element.label !== 'date_publication'}
+          size={element.label === 'date_publication' ? 'small' : undefined}
+          multiline={element.label === 'description'}
+          defaultValue={defaultValue[element.label]}
+          {...register(element.label, { required: true, minLength: 5 })}
+          error={!!errors[element.label]}
+          helperText={errors[element.label] ? errors.message : ''}
+        />
+    </Box>
+  );
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset
+  } = useForm();
+
+  // Función que se ejecuta al enviar el formulario
+  const onSubmit = async (data) => {
+    const dataFormatted = {
+      "isbn": libro.isbn,
+      "title": data.title,
+      "author": data.author,
+      "gender": data.gender,
+      "date_publication": data.date_publication,
+      "description": data.description,
+      "status": libro.status,
+    };
+  
+    try {
+      const response = await updateLibro(libro.isbn, dataFormatted);
+      console.log(response);
+      if (response && response.status === 200) { 
+        alert("Se actualizó el libro exitosamente");
+        // Recargar la página
+        window.location.reload();
+      } else {
+        alert("No se pudo actualizar el libro.");
+      }
+    } catch (error) {
+      console.log("Error: ", error);
+      alert("No se pudo actualizar el libro. Ingrese datos válidos");
+    }
+    
+    // Asegúrate de llamar a handleClose
+    handleClose();
+  };
 
   return (
     <div className='px-8 py-4 lg:px-24'>
@@ -85,7 +190,8 @@ export const LibroPage = () => {
           </div>
         </dl>
       </div>
-
+    {
+      user.type==='cliente' ? (
       <div className='flex mt-16 items-center justify-around flex-col gap-12 lg:flex-row lg:px-0'>
         <button
           className="w-64 lg:w-auto rounded-3xl border border-gray-950 bg-gray-950 px-16 py-2 text-sm font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-gray-600 cursor-pointer disabled:cursor-default disabled:bg-gray-400 disabled:border-gray-400 disabled:text-gray-500 disabled:font-medium"
@@ -94,8 +200,57 @@ export const LibroPage = () => {
         >
           Añadir a canasta
         </button>
-      </div>
+      </div>) : (
+      <div className='flex mt-16 items-center justify-around flex-col gap-12 lg:flex-row lg:px-0'>
+        <button
+          className="w-64 lg:w-auto rounded-3xl border border-gray-950 bg-gray-950 px-16 py-2 text-sm font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-gray-600 cursor-pointer disabled:cursor-default disabled:bg-gray-400 disabled:border-gray-400 disabled:text-gray-500 disabled:font-medium"
+          onClick={handleOpen}
+        >
+          Editar libro
+        </button>
+        <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Box sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 800,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+            maxHeight: '90vh', 
+            overflowY: 'auto', 
+          }}>
+            <div className='formItem' id='item2'>
+              <Typography variant='h4' fontWeight='bold' >
+                Editar libro
+              </Typography>
+                {labels.map((ele) => textLabels(ele, bookFormatted))}
+                <Button variant="contained"
+                  type='submit'
+                  style={{
+                    backgroundColor: 'black',
+                    color: 'white',
+                    borderRadius: '50px',
+                    width: '200px',
+                    textTransform: 'none',
+                    margin: '50px auto 10px',
+                  }} >Actualizar Libro</Button>
+              </div>
+          </Box>
+        </form>
+      </Modal>
 
+    </div>
+      )
+    }
       <ToastContainer />
     </div>
   );
