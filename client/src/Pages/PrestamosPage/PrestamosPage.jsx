@@ -12,11 +12,13 @@ import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import { getAllPrestamos } from "../../api/prestamos.api"; 
-import { useLoaderData } from "react-router-dom";
+import { getUsuario } from "../../api/usuarios.api";
+import { useLoaderData} from "react-router-dom";
 
-export async function loader(){
+export async function loader({params}){
   const prestamos=(await getAllPrestamos()).data;
-  return prestamos;
+  const usuario=(await getUsuario(params.userId)).data;
+  return {prestamos,usuario};
 }
 
 const columns = [
@@ -37,10 +39,11 @@ export const PrestamosPage = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [searchQuery, setSearchQuery] = React.useState("");
-  const prestamos=useLoaderData();
+  const data=useLoaderData();
+
   
 
-  const rows=prestamos.map((prestamo)=>createData(prestamo.id,prestamo.libro,prestamo.usuario,prestamo.end_date,prestamo.status));
+  const rows=data.prestamos.map((prestamo)=>createData(prestamo.id,prestamo.libro,prestamo.usuario,prestamo.end_date,prestamo.status));
 
   
 
@@ -139,7 +142,7 @@ export const PrestamosPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredRows
+              {data.usuario.type=="administrador"?filteredRows
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
                   return (
@@ -151,15 +154,15 @@ export const PrestamosPage = () => {
                             {column.id === "status" ? (
                               <span
                                 style={{
-                                  color: value === "Activo" ? "#498B58" : value === "Vencido" ? "#913D3D" : "#5F6368",
-                                  backgroundColor: value === "Terminado" ? "#72A1F7" : value === "Activo" ? "#D0FFD8" : value === "Vencido" ? "#F77272" : "#E1E3E5",
+                                  color: value === "activo" ? "#498B58" : value === "vencido" ? "#913D3D" : "#5F6368",
+                                  backgroundColor: value === "terminado" ? "#72A1F7" : value === "activo" ? "#D0FFD8" : value === "vencido" ? "#F77272" : "#E1E3E5",
                                   fontWeight: "bold",
                                   padding: "2px 4px",
                                   borderRadius: "4px",
                                   display: "inline-block",
                                 }}
                               >
-                                {value === "Terminado" ? <span style={{ color: "#FFFFFF" }}>{value}</span> : value}
+                                {value === "terminado" ? <span style={{ color: "#FFFFFF" }}>{value}</span> : value}
                               </span>
                             ) : (
                               value
@@ -169,7 +172,39 @@ export const PrestamosPage = () => {
                       })}
                     </TableRow>
                   );
-                })}
+                }):
+                filteredRows.filter((row)=>row.dni==data.usuario.dni)
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row) => {
+                  return (
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row.codigo}>
+                      {columns.map((column) => {
+                        const value = row[column.id];
+                        return (
+                          <TableCell key={column.id}>
+                            {column.id === "status" ? (
+                              <span
+                                style={{
+                                  color: value === "activo" ? "#498B58" : value === "vencido" ? "#913D3D" : "#5F6368",
+                                  backgroundColor: value === "terminado" ? "#72A1F7" : value === "activo" ? "#D0FFD8" : value === "vencido" ? "#F77272" : "#E1E3E5",
+                                  fontWeight: "bold",
+                                  padding: "2px 4px",
+                                  borderRadius: "4px",
+                                  display: "inline-block",
+                                }}
+                              >
+                                {value === "terminado" ? <span style={{ color: "#FFFFFF" }}>{value}</span> : value}
+                              </span>
+                            ) : (
+                              value
+                            )}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  );
+                })
+                }
             </TableBody>
           </Table>
         </TableContainer>
