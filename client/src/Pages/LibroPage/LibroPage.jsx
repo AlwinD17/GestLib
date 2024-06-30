@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { useLoaderData, useParams, useNavigate } from 'react-router-dom';
+import { useLoaderData, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookOpen } from '@fortawesome/free-solid-svg-icons';
 import { getLibro } from '../../api/libros.api';
 import { getUsuario } from "../../api/usuarios.api";
 import { ToastContainer, toast } from 'react-toastify';
 import { Box, Modal, Typography, TextField, Button } from '@mui/material'
-import { getUsuario } from '../../api/usuarios.api';
 import { updateLibro } from '../../api/libros.api';
 import { useForm } from "react-hook-form";
 import 'react-toastify/dist/ReactToastify.css';
@@ -43,15 +42,29 @@ const labels = [
 ]
 
 export const LibroPage = () => {
-  const libro = useLoaderData();
+  
+  const { libro, user} = useLoaderData();
   const { dni } = useParams();
+
+  const bookFormatted={
+    title: libro.title,
+    author : libro.author,
+    gender: libro.gender,
+    date_publication: libro.date_publication,
+    description: libro.description
+  };
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+
 
   const [libroCanasta, setLibroCanasta] = useState(false);
 
   function handleLibroCanasta() {
     // Obtener la canasta actual del usuario desde localStorage usando userId
     const storedCanasta = JSON.parse(localStorage.getItem(`canasta_${userId}`)) || [];
-    
     // Verificar si el libro ya está en la canasta del usuario
     const libroEnCanasta = storedCanasta.find((item) => item.isbn === libro.isbn);
   
@@ -111,8 +124,8 @@ export const LibroPage = () => {
       const response = await updateLibro(libro.isbn, dataFormatted);
       console.log(response);
       if (response && response.status === 200) { 
-        alert("Se actualizó el libro exitosamente");
         window.location.reload();
+        alert("Se actualizó el libro exitosamente");
       } else {
         alert("No se pudo actualizar el libro.");
       }
@@ -234,7 +247,6 @@ export const LibroPage = () => {
           </Box>
         </form>
       </Modal>
-
     </div>
       )
     }

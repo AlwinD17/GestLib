@@ -22,6 +22,7 @@ export const RegistrarsePage = () => {
       {...register(label.toLowerCase(), { required: true, minLength: 5 })}
       error={!!errors[label.toLowerCase()]}
       helperText={errors[label.toLowerCase()] ? errors.message : ''}
+      type={label === 'contraseña'? 'password' : null}
     />
   );
 
