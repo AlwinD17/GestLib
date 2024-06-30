@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import {useLoaderData} from "react-router-dom";
 import axios from "axios";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { createLibro,getAllLibros } from "../../api/libros.api";
 import { getAllUsuarios } from "../../api/usuarios.api";
 import { createPrestamo,getAllPrestamos } from "../../api/prestamos.api";
+import "./PanelAdministracion.css";
 
 export async function loader(){
   const usuarios=(await getAllUsuarios()).data;
@@ -178,12 +181,17 @@ export const PanelAdministracionPage = () => {
               <label htmlFor="publication" className="block text-gray-700">
                 Fecha de publicación:
               </label>
-              <input
-                type="text"
-                id="publication"
-                value={date_publication}
-                onChange={(e) => setPublication(e.target.value)}
+              <DatePicker
+                selected={date_publication}
+                onChange={(date) => setPublication(date)}
                 className="w-full sm:w-80 border border-gray-300 p-2 rounded-full"
+                popperPlacement="right-start"
+                showYearDropdown
+                showMonthDropdown
+                scrollableYearDropdown
+                yearDropdownItemNumber={15}
+                dropdownMode="select"
+                calendarClassName="text-sm"
               />
             </div>
           </div>
