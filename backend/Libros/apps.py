@@ -13,7 +13,7 @@ class LibrosConfig(AppConfig):
         avl_libros=AVLTree()
 
         #Comentar para makemigrations y migrate
-        #for libro in Libro.objects.all():
-            #avl_libros.insert(libro.isbn,libro) 
+        for libro in Libro.objects.all():
+            avl_libros.insert(libro.isbn,libro) 
 
         import Libros.signals
