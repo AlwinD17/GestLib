@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { createLibro,getAllLibros } from "../../api/libros.api";
 import { getAllUsuarios } from "../../api/usuarios.api";
 import { createPrestamo,getAllPrestamos } from "../../api/prestamos.api";
+import { ToastContainer, toast } from 'react-toastify';
 import "./PanelAdministracion.css";
 
 export async function loader(){
@@ -37,13 +38,22 @@ export const PanelAdministracionPage = () => {
       date_publication,
       description,
     };
-    try {
-      await createLibro(bookData);
-      alert("Libro añadido con éxito");
-    } catch (error) {
-      console.error("Error al añadir libro:", error);
-      alert("Hubo un error al añadir el libro.");
+    console.log(bookData);
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+
+    if(dateRegex.test(bookData.date_publication)){
+      try {
+        await createLibro(bookData);
+        toast.success("Libro añadido con éxito");
+      } catch (error) {
+        console.error("Error al añadir libro:", error);
+        toast.error("Hubo un error al añadir el libro.");
+      }
     }
+    else{
+      toast.warning("Ingresar fecha en formato YYYY-MM-DD.");
+    }
+    
   };
 
   const handleGenerateLoan = async () => {
@@ -87,16 +97,16 @@ export const PanelAdministracionPage = () => {
 
     // Mostrar errores si hay
     if (errores.length > 0) {
-      alert(errores.join('\n'));
+      toast.warning(errores.join('\n'));
     }
     // Sí data es válida
     if (esValido) {
       try {
         await createPrestamo(loanData);
-        alert("Préstamo generado con éxito.");
+        toast.success("Préstamo generado con éxito.");
       } catch (error) {
         console.error("Error creando préstamo: ", error);
-        alert("Hubo un error generando el préstamo.");
+        toast.error("Hubo un error generando el préstamo.");
       }
     }
   };
@@ -151,6 +161,7 @@ export const PanelAdministracionPage = () => {
                 value={isbn}
                 onChange={(e) => setIsbn(e.target.value)}
                 className="w-full sm:w-80 border border-gray-300 p-2 rounded-full"
+                required
               />
             </div>
             <div>
@@ -163,6 +174,7 @@ export const PanelAdministracionPage = () => {
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
                 className="w-full sm:w-80 border border-gray-300 p-2 rounded-full"
+                required
               />
             </div>
             <div>
@@ -175,6 +187,7 @@ export const PanelAdministracionPage = () => {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 className="w-full sm:w-80 border border-gray-300 p-2 rounded-full"
+                required
               />
             </div>
             <div>
@@ -183,7 +196,13 @@ export const PanelAdministracionPage = () => {
               </label>
               <DatePicker
                 selected={date_publication}
-                onChange={(date) => setPublication(date)}
+                onChange={(date) => {
+                  const year = date.getFullYear();
+                  const month = String(date.getMonth() + 1).padStart(2, '0'); // January is 0, so we add 1
+                  const day = String(date.getDate()).padStart(2, '0');
+                  setPublication(`${year}-${month}-${day}`);
+                  console.log(`${year}-${month}-${day}`);
+                }}
                 className="w-full sm:w-80 border border-gray-300 p-2 rounded-full"
                 popperPlacement="right-start"
                 showYearDropdown
@@ -192,6 +211,7 @@ export const PanelAdministracionPage = () => {
                 yearDropdownItemNumber={15}
                 dropdownMode="select"
                 calendarClassName="text-sm"
+                dateFormat="yyyy-MM-dd"
               />
             </div>
           </div>
@@ -205,6 +225,7 @@ export const PanelAdministracionPage = () => {
               value={gender}
               onChange={(e) => setGenre(e.target.value)}
               className="w-80 border border-gray-300 p-2 rounded-full"
+              required
             />
           </div>
           <div className="mb-4">
@@ -246,6 +267,7 @@ export const PanelAdministracionPage = () => {
                 value={isbnLoan}
                 onChange={(e) => setIsbnLoan(e.target.value)}
                 className="w-full sm:w-80 border border-gray-300 p-2 rounded-full"
+                required
               />
             </div>
             <div>
@@ -258,6 +280,7 @@ export const PanelAdministracionPage = () => {
                 value={dni}
                 onChange={(e) => setDni(e.target.value)}
                 className="w-full sm:w-80 border border-gray-300 p-2 rounded-full"
+                required
               />
             </div>
             <div>
@@ -270,6 +293,7 @@ export const PanelAdministracionPage = () => {
                 value={days}
                 onChange={(e) => setDays(e.target.value)}
                 className="w-full sm:w-80 border border-gray-300 p-2 rounded-full"
+                required
               />
             </div>
           </div>
@@ -281,6 +305,8 @@ export const PanelAdministracionPage = () => {
           </button>
         </form>
       </section>
+      <ToastContainer />
     </div>
+    
   );
 };
