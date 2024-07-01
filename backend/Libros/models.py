@@ -7,7 +7,7 @@ class Libro(models.Model):
         ('prestado', 'Prestado'),
     ]
 
-    isbn = models.CharField(max_length=8, unique=True, verbose_name='ISBN')
+    isbn = models.CharField(primary_key=True,max_length=8, unique=True, verbose_name='ISBN')
     title = models.CharField(max_length=255, verbose_name='Título')
     author = models.CharField(max_length=255, verbose_name='Autor')
     gender = models.CharField(max_length=100, verbose_name='Género')

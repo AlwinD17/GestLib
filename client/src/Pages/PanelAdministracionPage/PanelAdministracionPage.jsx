@@ -1,13 +1,28 @@
 import React, { useState } from "react";
+import {useLoaderData} from "react-router-dom";
 import axios from "axios";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { createLibro,getAllLibros } from "../../api/libros.api";
+import { getAllUsuarios } from "../../api/usuarios.api";
+import { createPrestamo,getAllPrestamos } from "../../api/prestamos.api";
+import "./PanelAdministracion.css";
+
+export async function loader(){
+  const usuarios=(await getAllUsuarios()).data;
+  const libros=(await getAllLibros()).data;
+  const prestamos=(await getAllPrestamos()).data;
+  return{usuarios,libros,prestamos};
+}
 
 export const PanelAdministracionPage = () => {
+  const data=useLoaderData();
   const [isbn, setIsbn] = useState("");
   const [title, setTitle] = useState("");
-  const [genre, setGenre] = useState("");
+  const [gender, setGenre] = useState("");
   const [author, setAuthor] = useState("");
-  const [publication, setPublication] = useState("");
+  const [date_publication, setPublication] = useState("");
   const [description, setDescription] = useState("");
   const [isbnLoan, setIsbnLoan] = useState("");
   const [dni, setDni] = useState("");
@@ -17,28 +32,72 @@ export const PanelAdministracionPage = () => {
     const bookData = {
       isbn,
       title,
-      genre,
+      gender,
       author,
-      publication,
+      date_publication,
       description,
     };
     try {
-      await axios.post("URL_DEL_BACKEND/api/v1/libros/", bookData);
+      await createLibro(bookData);
       alert("Libro añadido con éxito");
     } catch (error) {
       console.error("Error al añadir libro:", error);
-      alert("Hubo un error al añadir el libro");
+      alert("Hubo un error al añadir el libro.");
     }
   };
 
   const handleGenerateLoan = async () => {
-    const loanData = { isbn: isbnLoan, dni, days };
-    try {
-      await axios.post("URL_DEL_BACKEND/api/v1/prestamos/", loanData);
-      alert("Préstamo generado con éxito");
-    } catch (error) {
-      console.error("Error al generar préstamo:", error);
-      alert("Hubo un error al generar el préstamo");
+    const loanData = { libro: isbnLoan, usuario:dni, time_in_days:days };
+    let esValido = true;
+    let errores = [];
+
+    // Validacion de libro
+    const libro = data.libros.find((libro) => libro.isbn === loanData.libro);
+    if (libro) {
+      if (libro.status === "prestado") {
+        esValido = false;
+        errores.push("Libro no está disponible.");
+      }
+    } else {
+      esValido = false;
+      errores.push("Ingrese un libro válido.");
+    }
+    // Validacion de usuario
+    const usuario = data.usuarios.find((usuario) => usuario.dni === loanData.usuario);
+    if (usuario) {
+      let nPrestamos = 0;
+      data.prestamos.forEach((prestamo) => {
+        if (prestamo.usuario === usuario.dni) {
+          nPrestamos++;
+        }
+      });
+      if (nPrestamos >= 3) {
+        esValido = false;
+        errores.push("Usuario ya alcanzó el límite de préstamos.");
+      }
+    } else {
+      esValido = false;
+      errores.push("Ingrese un usuario válido.");
+    }
+    //Validacion de dias
+    if(loanData.time_in_days>7 || loanData.time_in_days<1){
+      esValido = false;
+      errores.push("Ingrese un número válido de días.");
+    }
+
+    // Mostrar errores si hay
+    if (errores.length > 0) {
+      alert(errores.join('\n'));
+    }
+    // Sí data es válida
+    if (esValido) {
+      try {
+        await createPrestamo(loanData);
+        alert("Préstamo generado con éxito.");
+      } catch (error) {
+        console.error("Error creando préstamo: ", error);
+        alert("Hubo un error generando el préstamo.");
+      }
     }
   };
 
@@ -54,21 +113,21 @@ export const PanelAdministracionPage = () => {
           <i className="fas fa-book text-4xl text-gray-500 mr-4"></i>
           <div>
             <h2 className="text-xl font-bold">Libros</h2>
-            <p className="text-2xl">3 000</p>
+            <p className="text-2xl">{data.libros.length}</p>
           </div>
         </div>
         <div className="bg-white p-6 shadow rounded flex items-center">
           <i className="fas fa-users text-4xl text-gray-500 mr-4"></i>
           <div>
             <h2 className="text-xl font-bold">Usuarios</h2>
-            <p className="text-2xl">150</p>
+            <p className="text-2xl">{data.usuarios.length}</p>
           </div>
         </div>
         <div className="bg-white p-6 shadow rounded flex items-center">
           <i className="fas fa-exchange-alt text-4xl text-gray-500 mr-4"></i>
           <div>
             <h2 className="text-xl font-bold">Préstamos</h2>
-            <p className="text-2xl">51</p>
+            <p className="text-2xl">{data.prestamos.length}</p>
           </div>
         </div>
       </section>
@@ -122,12 +181,17 @@ export const PanelAdministracionPage = () => {
               <label htmlFor="publication" className="block text-gray-700">
                 Fecha de publicación:
               </label>
-              <input
-                type="text"
-                id="publication"
-                value={publication}
-                onChange={(e) => setPublication(e.target.value)}
+              <DatePicker
+                selected={date_publication}
+                onChange={(date) => setPublication(date)}
                 className="w-full sm:w-80 border border-gray-300 p-2 rounded-full"
+                popperPlacement="right-start"
+                showYearDropdown
+                showMonthDropdown
+                scrollableYearDropdown
+                yearDropdownItemNumber={15}
+                dropdownMode="select"
+                calendarClassName="text-sm"
               />
             </div>
           </div>
@@ -138,7 +202,7 @@ export const PanelAdministracionPage = () => {
             <input
               type="text"
               id="genre"
-              value={genre}
+              value={gender}
               onChange={(e) => setGenre(e.target.value)}
               className="w-80 border border-gray-300 p-2 rounded-full"
             />
@@ -201,7 +265,7 @@ export const PanelAdministracionPage = () => {
                 Días:
               </label>
               <input
-                type="text"
+                type="number"
                 id="days"
                 value={days}
                 onChange={(e) => setDays(e.target.value)}
