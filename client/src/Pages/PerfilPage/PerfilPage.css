@@ -1,0 +1,105 @@
+  .container {
+    width: 90vw;
+    margin: 5vh auto;
+    padding: 10vh 10vw;
+    background-color: white;
+    border: 2px solid #ccc;
+  }
+  
+  .formContainer {
+    display: flex;
+    flex-direction: column;
+    min-height: 70vh;
+    border-radius: 30px;
+    background-color: white; /* Fondo gris claro */
+    padding: 20px;
+    margin-top: 20px;
+  }
+  
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+    margin-left: -130px;
+  }
+  
+  .userIcon {
+    font-size: 90px; /* Tamaño del icono */
+  }
+  
+  .headerTitle {
+    font-size: 30px;
+    margin-top: 50px; /* Tamaño de la letra del título */
+  }
+  
+  .personIcon {
+    font-size: 1px; /* Tamaño del icono de perfil */
+    margin-top: 50px;
+  }
+  .personPin {
+    font-size: 400px; /* Tamaño del icono de perfil */
+    margin-top: 50px;
+  }
+
+  .profileIcon {
+    font-size: 1px; /* Tamaño del icono de perfil */
+    margin-top: -50px;
+  }
+  
+  .profileTitle {
+    font-size: 30px; /* Tamaño del título */
+    margin: 0; /* Elimina el margen predeterminado */
+    margin-top: -50px; /* Ajusta este valor según sea necesario */
+
+  }
+
+  .profileHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px; /* Espacio entre el encabezado y el contenedor principal */
+  }
+  .info-row {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 30px; /* Más espacio entre las líneas */
+    margin-left: -130px;
+  }
+  
+  .info-label {
+    font-weight: bold;;
+  }
+  
+  .info-value {
+    color: gray;
+  }
+/* Estilos para contenedor de cada campo */
+.editFieldContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Alinea verticalmente los elementos */
+  margin-bottom: 20px; /* Espacio entre cada contenedor de campo */
+  position: relative;
+  margin-top: 40px;
+}
+
+/* Estilos para el espacio en blanco al lado del campo de texto */
+.editFieldBlank {
+  margin-right: 20px;
+}
+  
+
+/* Estilos para cada campo de edición */
+.editField {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+/* Estilos para el texto del nombre del campo */
+.editLabel {
+  font-weight: bold;
+  margin-top: 15px;
+  margin-right: 20px;
+}
+
+
