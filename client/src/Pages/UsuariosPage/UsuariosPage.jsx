@@ -45,8 +45,8 @@ export const UsuariosPage = () => {
   const fetchUsers = async () => {
     try {
       const response = await getAllUsuarios();
-      const adminUsers = response.data.filter(user => user.type === "administrador");
-      setRows(adminUsers);
+      const filteredUsers = response.data.filter(user => user.type !== "administrador");
+      setRows(filteredUsers);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -124,7 +124,7 @@ export const UsuariosPage = () => {
                     ? "Correo electrónico"
                     : "Buscar"
                 }`}
-                sx={{ width: 1100, backgroundColor: "white" }}
+                sx={{ width: 300, backgroundColor: "white" }}
               />
             )}
             onInputChange={handleSearch}
