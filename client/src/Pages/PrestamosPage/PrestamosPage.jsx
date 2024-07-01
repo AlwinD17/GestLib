@@ -13,7 +13,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import { getAllPrestamos } from "../../api/prestamos.api"; 
 import { getUsuario } from "../../api/usuarios.api";
-import { useLoaderData} from "react-router-dom";
+import { useLoaderData, useNavigate} from "react-router-dom";
 
 export async function loader({params}){
   const prestamos=(await getAllPrestamos()).data;
@@ -40,6 +40,7 @@ export const PrestamosPage = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [searchQuery, setSearchQuery] = React.useState("");
   const data=useLoaderData();
+  const navigate=useNavigate();
 
   
 
@@ -146,7 +147,7 @@ export const PrestamosPage = () => {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
                   return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row.codigo}>
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row.codigo} onClick={() => navigate(`${row.codigo}`)}>
                       {columns.map((column) => {
                         const value = row[column.id];
                         return (
@@ -177,7 +178,7 @@ export const PrestamosPage = () => {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
                   return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row.codigo}>
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row.codigo} onClick={() => navigate(`${row.codigo}`)}>
                       {columns.map((column) => {
                         const value = row[column.id];
                         return (
