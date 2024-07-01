@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useLoaderData, useParams } from 'react-router-dom';
+import { useLoaderData, useParams, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookOpen } from '@fortawesome/free-solid-svg-icons';
-import { getLibro } from '../../api/libros.api';
+import { deleteLibro, getLibro } from '../../api/libros.api';
 import { getUsuario } from "../../api/usuarios.api";
 import { ToastContainer, toast } from 'react-toastify';
 import { Box, Modal, Typography, TextField, Button } from '@mui/material'
@@ -44,8 +44,8 @@ const labels = [
 export const LibroPage = () => {
   
   const { libro, user} = useLoaderData();
-  const userId = useParams().userId; // Obtener userId(DNI) desde los parámetros de la URL
-
+  const userId = useParams().userId; 
+  const navigate = useNavigate();
   const bookFormatted={
     title: libro.title,
     author : libro.author,
@@ -137,6 +137,25 @@ export const LibroPage = () => {
     handleClose();
   };
 
+  const onDelete = async () => {
+    // try {
+      const response = await deleteLibro(libro.isbn);
+      navigate(-1);
+      toast.success("Se eliminó el libro exitosamente");
+    //   if (response && response.status === 200) {
+    //     navigate(-1);
+    //     toast.success("Se eliminó el libro exitosamente");
+        
+    //   } else {
+    //     toast.error("No se pudo eliminar el libro.");
+    //   }
+    // } catch (error) {
+    //   console.log("Error: ", error);
+    //   toast.error("No se pudo eliminar el libro.");
+    // }
+  };
+
+
   return (
     <div className='px-8 py-4 lg:px-24'>
       <div className='flex'>
@@ -207,6 +226,12 @@ export const LibroPage = () => {
           onClick={handleOpen}
         >
           Editar libro
+        </button>
+        <button
+          className="w-64 lg:w-auto rounded-3xl border border-gray-950 bg-red-700 px-16 py-2 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-gray-600 cursor-pointer disabled:cursor-default disabled:bg-gray-400 disabled:border-gray-400 disabled:text-gray-500 disabled:font-medium"
+          onClick={onDelete}
+        >
+          Eliminar libro
         </button>
         <Modal
         open={open}

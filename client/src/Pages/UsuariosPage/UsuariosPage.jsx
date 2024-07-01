@@ -40,12 +40,13 @@ export const UsuariosPage = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchBy, setSearchBy] = useState("dni");
   const navigate = useNavigate();
-  const userId= (useParams()).userId;
+  const userId = useParams().userId;
 
   const fetchUsers = async () => {
     try {
       const response = await getAllUsuarios();
-      setRows(response.data);
+      const filteredUsers = response.data.filter(user => user.type !== "administrador");
+      setRows(filteredUsers);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -87,7 +88,7 @@ export const UsuariosPage = () => {
 
   return (
     <>
-      <Paper sx={{ width: "100%", overflow: "hidden", padding: "12px", backgroundColor: "#f5f5f5" }}>
+      <Paper sx={{ width: "100%", overflow: "hidden", padding: "12px", backgroundColor: "white" }}>
         <Stack
           direction="row"
           alignItems="center"
@@ -123,7 +124,7 @@ export const UsuariosPage = () => {
                     ? "Correo electrónico"
                     : "Buscar"
                 }`}
-                sx={{ width: 1350, backgroundColor: "white" }}
+                sx={{ width: 300, backgroundColor: "white" }}
               />
             )}
             onInputChange={handleSearch}

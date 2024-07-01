@@ -18,7 +18,8 @@ export async function loader({ params }) {
 }
 
 export const PerfilPage = () => {
-  const user = useLoaderData();
+  const userFromLoader = useLoaderData();
+  const [user, setUser] = useState(userFromLoader);
   const userFormatted = {
     usuario: user.username,
     contraseña: user.password,
@@ -58,6 +59,7 @@ export const PerfilPage = () => {
       console.log(response);
       if (response && response.status === 200) {
         alert("Se actualizó el usuario exitosamente");
+        setUser(dataFormatted);
         setIsEditable(false);
         setOpen(false);
       } else {
