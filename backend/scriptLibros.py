@@ -12,12 +12,11 @@ def detectar_encoding(archivo):
         return resultado['encoding']
 
 def cargar_libros(desde_archivo):
-    
+    contador = 0
     encoding = detectar_encoding(desde_archivo)
     with open(desde_archivo, 'r', encoding=encoding) as archivo:
         lector = csv.DictReader(archivo)
         for linea in lector:
-            
             try:
                 isbn = linea['isbn10'].strip()
                 authors = linea['authors'].strip()
@@ -43,5 +42,10 @@ def cargar_libros(desde_archivo):
                     description=linea.get('description', '').strip(),
                     status='disponible'
                 )
+                
+                contador+=1
+                if contador == 200:
+                    break
+
             except Exception as e:
                 print(f"Error al cargar el libro con ISBN {linea.get('isbn10', 'N/A')}: {e}")
