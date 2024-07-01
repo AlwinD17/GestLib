@@ -27,7 +27,7 @@ import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { createPrestamo } from "../../api/prestamos.api"; // Importar la función createPrestamo
+import { createPrestamo } from "../../api/prestamos.api";
 
 const columns = [
   { id: "isbn", label: "ISBN", minWidth: 100 },
@@ -122,7 +122,7 @@ export const CanastaPage = () => {
       return;
     }
 
-    // Verificar que todos los libros tengan un número de días válido
+    // Se verifica q todos los libros tengan un dia valido
     const invalidDays = rows.some((row) => !row.days || row.days < 1 || row.days > 15);
 
     if (invalidDays) {
@@ -131,10 +131,10 @@ export const CanastaPage = () => {
     }
 
     try {
-      // Crear un préstamo para cada libro en la canasta
+      // Se crea un préstamo para cada libro en la canasta
       const prestamosPromises = rows.map((row) => {
         const prestamoData = {
-          usuario: userId, // Asegúrate de que userId sea el dni del usuario
+          usuario: userId, // dni del usuario
           libro: row.isbn,
           time_in_days: row.days,
         };
